@@ -37,13 +37,17 @@ jobs:
             --build-arg QT_VERSION=${{ inputs.qt_version }} \
             -t ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }} \
             .
-
       - name: Generate SBOM (Syft)
         uses: anchore/sbom-action@v0.17.3
         with:
           image: ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}
           format: spdx-json
           output-file: sbom.spdx.json
+
+      - name: Install ORAS CLI
+        run: |
+          curl -sSfL https://github.com/oras-project/oras/releases/latest/download/oras_$(uname -s | tr '[:upper:]' '[:lower:]')_amd64.tar.gz \
+            | tar -xz -C /usr/local/bin oras
 
       - name: Push image
         run: |
