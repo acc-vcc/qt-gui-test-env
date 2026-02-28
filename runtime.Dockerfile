@@ -48,4 +48,4 @@ ENV PATH="/opt/Qt/${QT_VERSION}/gcc_64/bin:${PATH}"
 
 WORKDIR /workspace
 ENTRYPOINT ["/bin/bash"]
-
+CMD ["-c"]
