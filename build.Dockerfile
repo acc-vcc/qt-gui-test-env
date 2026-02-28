@@ -31,6 +31,8 @@ RUN apt-get update && apt-get install -y \
     patchelf \
     wget \
     git \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
     libgl1 \
     libglx0 \
     libopengl0 \
