@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip3 install aqtinstall
 
-RUN aqt install-qt linux desktop ${QT_VERSION} gcc_64 -O /opt/Qt
+RUN aqt install-qt linux desktop ${QT_VERSION} gcc_64 -O /opt/Qt \
+    --modules qtwebsockets
 
 # ============================
 # Stage 2: Runtime environment
