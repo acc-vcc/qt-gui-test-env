@@ -14,6 +14,8 @@ RUN pip3 install aqtinstall
 
 RUN aqt install-qt linux desktop ${QT_VERSION} gcc_64 -O /opt/Qt \
     --modules qtwebsockets
+RUN apt-get update && apt-get install -y \
+
 
 # ============================
 # Stage 2: Build environment
@@ -30,6 +32,11 @@ RUN apt-get update && apt-get install -y \
     patchelf \
     wget \
     git \
+    libgl1 \
+    libglx0 \
+    libopengl0 \
+    libglu1-mesa \
+    mesa-utils \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Qt 開発環境をコピー

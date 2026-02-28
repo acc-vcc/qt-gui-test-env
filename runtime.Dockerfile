@@ -38,9 +38,13 @@ RUN apt-get update && apt-get install -y \
     libxcb-xfixes0 \
     libglu1-mesa \
     libgl1 \
+    libglx0 \
+    libopengl0 \
+    mesa-utils \
     libnss3 \
     libasound2 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 # Qt ランタイムのみコピー
 COPY --from=builder /opt/Qt /opt/Qt
