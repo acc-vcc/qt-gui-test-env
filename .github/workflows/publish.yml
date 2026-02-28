@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       tag:
-        description: "Image tag (e.g. qt6.6.1)"
+        description: "Base tag (e.g. qt6.6.1)"
         required: true
         type: string
 
@@ -31,35 +31,76 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build image
+      # ============================
+      # Build: build image
+      # ============================
+      - name: Build build image
         run: |
           docker build \
             --build-arg QT_VERSION=${{ inputs.qt_version }} \
-            -t ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }} \
+            -f build.Dockerfile \
+            -t ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}-build \
             .
-            
-      - name: Show image size
-        run: docker images ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}
-      
-      - name: Generate SBOM (Syft)
+
+      - name: Show build image size
+        run: docker images ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}-build
+
+      - name: Generate SBOM for build image
         uses: anchore/sbom-action@v0.17.3
         with:
-          image: ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}
+          image: ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}-build
           format: spdx-json
-          output-file: sbom.spdx.json
+          output-file: sbom-build.spdx.json
 
+      # ============================
+      # Build: runtime image
+      # ============================
+      - name: Build runtime image
+        run: |
+          docker build \
+            --build-arg QT_VERSION=${{ inputs.qt_version }} \
+            -f runtime.Dockerfile \
+            -t ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}-runtime \
+            .
+
+      - name: Show runtime image size
+        run: docker images ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}-runtime
+
+      - name: Generate SBOM for runtime image
+        uses: anchore/sbom-action@v0.17.3
+        with:
+          image: ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}-runtime
+          format: spdx-json
+          output-file: sbom-runtime.spdx.json
+
+      # ============================
+      # Install ORAS
+      # ============================
       - name: Install ORAS CLI
         run: |
           ORAS_VERSION=$(curl -s https://api.github.com/repos/oras-project/oras/releases/latest | jq -r '.tag_name')
           curl -sSfL https://github.com/oras-project/oras/releases/download/${ORAS_VERSION}/oras_${ORAS_VERSION#v}_linux_amd64.tar.gz \
             | tar -xz -C /usr/local/bin oras
 
-      - name: Push image
+      # ============================
+      # Push images
+      # ============================
+      - name: Push images
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}
+          docker push ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}-build
+          docker push ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}-runtime
 
-      - name: Upload SBOM to GHCR
+      # ============================
+      # Upload SBOMs
+      # ============================
+      - name: Upload SBOM for build image
         run: |
-          oras push ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}-sbom \
+          oras push ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}-build-sbom \
             --artifact-type application/spdx+json \
-            sbom.spdx.json:application/spdx+json
+            sbom-build.spdx.json:application/spdx+json
+
+      - name: Upload SBOM for runtime image
+        run: |
+          oras push ghcr.io/${{ github.repository_owner }}/qt-gui-test-env:${{ inputs.tag }}-runtime-sbom \
+            --artifact-type application/spdx+json \
+            sbom-runtime.spdx.json:application/spdx+json
