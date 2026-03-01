@@ -38,6 +38,7 @@ RUN apt-get update && apt-get install -y \
     xvfb x11-apps xauth \
     openbox fluxbox \
     xdotool wmctrl dbus-x11 \
+    xserver-xorg-core xserver-xorg-video-dummy xfonts-base \
     pipewire pipewire-pulse wireplumber ffmpeg imagemagick tesseract-ocr \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
