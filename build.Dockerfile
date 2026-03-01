@@ -35,7 +35,10 @@ RUN apt-get update && apt-get install -y \
     libxcb-xfixes0 libxcb-xinerama0 libxcb-xinput0 libxcb-xkb1 \
     libx11-6 libnss3 libasound2 \
     libwayland-client0 libwayland-cursor0 libwayland-egl1 libwayland-server0 wayland-protocols \
-    xvfb pipewire pipewire-pulse wireplumber ffmpeg imagemagick tesseract-ocr \
+    xvfb x11-apps xauth \
+    openbox fluxbox \
+    xdotool wmctrl dbus-x11 \
+    pipewire pipewire-pulse wireplumber ffmpeg imagemagick tesseract-ocr \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # ---- Python ライブラリも1 RUNにまとめる ----
