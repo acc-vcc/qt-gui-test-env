@@ -38,6 +38,9 @@ RUN apt-get update && apt-get install -y \
     libopengl0 \
     libglu1-mesa \
     mesa-utils \
+    libxkbcommon0 \
+    libxkbcommon-x11-0 \
+    libdbus-1-3 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Qt 開発環境をコピー
