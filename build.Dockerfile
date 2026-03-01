@@ -41,6 +41,10 @@ RUN apt-get update && apt-get install -y \
     libxkbcommon0 \
     libxkbcommon-x11-0 \
     libdbus-1-3 \
+    libxcb-cursor0 \
+    libxcb-xinerama0 \
+    libxcb-xinput0 \
+    libxcb-xkb1 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Qt 開発環境をコピー
