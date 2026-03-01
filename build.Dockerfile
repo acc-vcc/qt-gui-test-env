@@ -43,9 +43,6 @@ RUN apt-get update && apt-get install -y \
     xdotool wmctrl dbus-x11 \
     xserver-xorg-core xserver-xorg-video-dummy xfonts-base \
     \
-    # PipeWire（本体 + Pulse + WirePlumber）
-    pipewire pipewire-pulse wireplumber \
-    \
     # PipeWire Python バインディング（←これが import pipewire を満たす）
     python3-pipewire \
     \
