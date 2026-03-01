@@ -45,6 +45,7 @@ RUN apt-get update && apt-get install -y \
     libxcb-xinerama0 \
     libxcb-xinput0 \
     libxcb-xkb1 \
+    libxcb-icccm4 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Qt 開発環境をコピー
