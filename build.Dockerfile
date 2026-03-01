@@ -43,9 +43,6 @@ RUN apt-get update && apt-get install -y \
     xdotool wmctrl dbus-x11 \
     xserver-xorg-core xserver-xorg-video-dummy xfonts-base \
     \
-    # PipeWire Python バインディング（←これが import pipewire を満たす）
-    python3-pipewire \
-    \
     # 画像処理 / OCR / 動画
     ffmpeg imagemagick tesseract-ocr \
     \
