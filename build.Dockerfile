@@ -57,6 +57,11 @@ RUN apt-get update && apt-get install -y \
     libx11-6 \
     libnss3 \
     libasound2 \
+    libwayland-client0 \
+    libwayland-cursor0 \
+    libwayland-egl1 \
+    libwayland-server0 \
+    wayland-protocols \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Qt 開発環境をコピー
