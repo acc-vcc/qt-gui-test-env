@@ -28,7 +28,11 @@ RUN apt-get update && apt-get install -y \
     x11vnc \
     fluxbox \
     imagemagick \
-    python3 \
+    tesseract-ocr \
+    ffmpeg \
+    pipewire \
+    pipewire-pulse \
+    wireplumber \
     jq \
     libxkbcommon0 \
     libx11-6 \

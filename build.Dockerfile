@@ -8,66 +8,43 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
     python3 python3-pip curl wget unzip xz-utils git ca-certificates \
+    && pip3 install aqtinstall \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install aqtinstall
 
 RUN aqt install-qt linux desktop ${QT_VERSION} gcc_64 -O /opt/Qt \
     --modules qtwebsockets
 
 
 # ============================
-# Stage 2: Build environment
+# Stage 2: Build + Test environment
 # ============================
 FROM ubuntu:22.04
 
 ARG QT_VERSION=6.6.1
 ENV DEBIAN_FRONTEND=noninteractive
 
+# ---- 依存を1 RUNにまとめる（最重要） ----
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    pkg-config \
-    patchelf \
-    wget \
-    git \
-    libgl1-mesa-dev \
-    libglu1-mesa-dev \
-    libgl1 \
-    libglx0 \
-    libopengl0 \
-    libglu1-mesa \
-    mesa-utils \
-    libxkbcommon0 \
-    libxkbcommon-x11-0 \
-    libdbus-1-3 \
-    libxcb1 \
-    libxcb-cursor0 \
-    libxcb-icccm4 \
-    libxcb-image0 \
-    libxcb-keysyms1 \
-    libxcb-render-util0 \
-    libxcb-render0 \
-    libxcb-randr0 \
-    libxcb-shape0 \
-    libxcb-xfixes0 \
-    libxcb-xinerama0 \
-    libxcb-xinput0 \
-    libxcb-xkb1 \
-    libx11-6 \
-    libnss3 \
-    libasound2 \
-    libwayland-client0 \
-    libwayland-cursor0 \
-    libwayland-egl1 \
-    libwayland-server0 \
-    wayland-protocols \
+    build-essential cmake pkg-config patchelf wget git \
+    file \
+    python3 python3-pip \
+    libgl1-mesa-dev libglu1-mesa-dev libgl1 libglx0 libopengl0 libglu1-mesa mesa-utils \
+    libxkbcommon0 libxkbcommon-x11-0 libdbus-1-3 \
+    libxcb1 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+    libxcb-render-util0 libxcb-render0 libxcb-randr0 libxcb-shape0 \
+    libxcb-xfixes0 libxcb-xinerama0 libxcb-xinput0 libxcb-xkb1 \
+    libx11-6 libnss3 libasound2 \
+    libwayland-client0 libwayland-cursor0 libwayland-egl1 libwayland-server0 wayland-protocols \
+    xvfb pipewire pipewire-pulse wireplumber ffmpeg imagemagick tesseract-ocr \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Qt 開発環境をコピー
+# ---- Python ライブラリも1 RUNにまとめる ----
+RUN pip3 install \
+    pytest pillow opencv-python websocket-client pyyaml numpy
+
+# ---- Qt をコピー（大きいのでレイヤー分離はOK） ----
 COPY --from=builder /opt/Qt /opt/Qt
 
-# Qt の CMake パス
 ENV CMAKE_PREFIX_PATH="/opt/Qt/${QT_VERSION}/gcc_64"
 ENV PATH="/opt/Qt/${QT_VERSION}/gcc_64/bin:${PATH}"
 
