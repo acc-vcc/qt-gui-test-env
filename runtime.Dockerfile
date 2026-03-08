@@ -26,6 +26,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     xvfb \
     x11vnc \
+    xdpyinfo \
     fluxbox \
     imagemagick \
     tesseract-ocr \
