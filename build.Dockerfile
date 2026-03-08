@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y \
     libwayland-client0 libwayland-cursor0 libwayland-egl1 libwayland-server0 wayland-protocols \
     \
     # Xvfb + WM + GUI automation
-    xvfb x11-apps x11vnc xdpyinfo xauth \
+    xvfb x11-apps x11vnc x11-utils xauth \
     openbox fluxbox \
     xdotool wmctrl dbus-x11 \
     xserver-xorg-core xserver-xorg-video-dummy xfonts-base \
